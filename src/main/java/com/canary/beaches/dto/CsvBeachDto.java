@@ -61,7 +61,7 @@ public class CsvBeachDto {
     @CsvBindByName(column = "Aseo")
     private String restrooms;
 
-    @CsvBindByName(column = "Lavapies")
+    @CsvBindByName(column = "Duchas")
     private String showers;
 
     @CsvBindByName(column = "Longitud (m)")
@@ -102,4 +102,19 @@ public class CsvBeachDto {
 
     @CsvBindByName(column = "Area Deportiva")
     private String sportsArea;
+
+    @CsvBindByName(column = "Alquiler de hamacas")
+    private String sunbedRentals;
+
+    @CsvBindByName(column = "Alquiler de sombrillas")
+    private String umbrellaRentals;
+
+    @CsvBindByName(column = "Alquiler nautico")
+    private String waterSportsRentals;
+
+    @CsvBindByName(column = "Aseo")
+    private String toilets;
+
+    @CsvBindByName(column = "Lavapies")
+    private String footShowers;
 }

@@ -1,5 +1,7 @@
 package com.canary.beaches.service.impl;
 
+import com.canary.beaches.dto.BeachDto;
+import com.canary.beaches.mapper.BeachMapper;
 import com.canary.beaches.model.Beach;
 import com.canary.beaches.repository.BeachRepository;
 import com.canary.beaches.service.BeachService;
@@ -24,8 +26,10 @@ public class BeachServiceImpl implements BeachService {
     }
 
     @Override
-    public Optional<Beach> findById(String id) {
-        return beachRepository.findById(id);
+    public Optional<BeachDto> findById(Long id) {
+        Beach beach = beachRepository.findById(id);
+        BeachDto beachDto = BeachMapper.toDto(beach);
+        return Optional.of(beachDto);
     }
 
     @Override
