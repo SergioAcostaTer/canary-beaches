@@ -7,6 +7,7 @@ public enum Island {
     LANZAROTE,
     LA_PALMA,
     LA_GOMERA,
-    EL_HIERRO
+    EL_HIERRO,
+    LA_GRACIOSA
 }
 
