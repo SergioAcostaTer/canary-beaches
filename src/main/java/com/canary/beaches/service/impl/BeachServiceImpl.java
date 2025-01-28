@@ -1,6 +1,7 @@
 package com.canary.beaches.service.impl;
 
 import com.canary.beaches.dto.BeachDto;
+import com.canary.beaches.dto.BeachPreviewDto;
 import com.canary.beaches.mapper.BeachMapper;
 import com.canary.beaches.model.Beach;
 import com.canary.beaches.repository.BeachRepository;
@@ -35,10 +36,7 @@ public class BeachServiceImpl implements BeachService {
     @Override
     public Optional<BeachDto> findById(Long id) {
         Optional<Beach> beach = beachRepository.findById(id);
-        if (beach.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(BeachMapper.toDto(beach.get()));
+        return beach.map(BeachMapper::toDto);
     }
 
     @Override
@@ -46,20 +44,9 @@ public class BeachServiceImpl implements BeachService {
         return beachRepository.save(beach);
     }
 
-    @Override
-    public void deleteById(Long id) {
-        beachRepository.deleteById(id);
-    }
-
-//    @Override
-//    public void deleteById(lon id) {
-//        beachRepository.deleteById(id);
-//    }
 
     @Override
     public Page<BeachDto> searchBeaches(String query, Pageable pageable) {
-        System.out.println("Searching beaches... name: " + query + ", page: " + pageable.getPageNumber() + ", size: " + pageable.getPageSize());
-
         Specification<Beach> spec = (root, criteriaQuery, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -77,6 +64,26 @@ public class BeachServiceImpl implements BeachService {
 
         return beachRepository.findAll(spec, pageable)
                 .map(BeachMapper::toDto);
+    }
 
+    @Override
+    public Page<BeachPreviewDto> searchBeachesPreview(String query, Pageable pageable) {
+        Specification<Beach> spec = (root, criteriaQuery, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (StringUtils.hasText(query)) {
+                String likeQuery = "%" + query + "%";
+                predicates.add(cb.or(
+                        cb.like(cb.lower(root.get("name")), likeQuery),
+                        cb.like(cb.lower(root.get("municipality")), likeQuery),
+                        cb.like(cb.lower(root.get("province")), likeQuery)
+                ));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return beachRepository.findAll(spec, pageable)
+                .map(BeachMapper::toPreviewDto);
     }
 }

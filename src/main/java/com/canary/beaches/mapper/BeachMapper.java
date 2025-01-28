@@ -2,6 +2,7 @@
 package com.canary.beaches.mapper;
 
 import com.canary.beaches.dto.BeachDto;
+import com.canary.beaches.dto.BeachPreviewDto;
 import com.canary.beaches.model.Beach;
 import com.canary.beaches.model.enums.*;
 import lombok.Builder;
@@ -27,6 +28,16 @@ public class BeachMapper {
         dto.setAccessibility(mapAccessibility(beach));
         dto.setSafety(mapSafety(beach));
         dto.setStatus(mapStatus(beach));
+        return dto;
+    }
+
+    public static BeachPreviewDto toPreviewDto(Beach beach) {
+        BeachPreviewDto dto = new BeachPreviewDto();
+        dto.setId(beach.getId());
+        dto.setName(beach.getName());
+        dto.setIsland(mapIslandName(beach.getIsland()));
+        dto.setProvince(beach.getProvince());
+        dto.setMunicipality(beach.getMunicipality());
         return dto;
     }
 
