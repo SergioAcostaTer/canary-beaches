@@ -1,0 +1,17 @@
+[phases.setup]
+nixPkgs = [
+    "jdk21",
+    "gradle",
+    "curl",
+    "wget"
+]
+
+[phases.build]
+cmds = [
+    "chmod +x gradlew",
+    "./gradlew clean build -x check -x test"
+]
+cacheDirectories = ["/root/.gradle"]
+
+[start]
+cmd = "java $JAVA_OPTS -jar -Dserver.port=$PORT $(ls -1 build/libs/*jar | grep -v plain)"
