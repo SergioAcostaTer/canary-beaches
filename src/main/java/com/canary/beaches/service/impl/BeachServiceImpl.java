@@ -51,7 +51,7 @@ public class BeachServiceImpl implements BeachService {
 
 
     @Override
-    public Page<BeachDto> searchBeaches(String query, Pageable pageable) {
+    public PaginatedResponse<BeachDto> searchBeaches(String query, Pageable pageable) {
         Specification<Beach> spec = (root, criteriaQuery, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -67,8 +67,10 @@ public class BeachServiceImpl implements BeachService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return beachRepository.findAll(spec, pageable)
+        Page<BeachDto> page = beachRepository.findAll(spec, pageable)
                 .map(BeachMapper::toDto);
+
+        return new PaginatedResponse<>(page);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class BeachController {
     @ApiResponse(responseCode = "200", description = "Successfully retrieved list of beaches",
             content = @Content(schema = @Schema(implementation = Page.class)))
     @GetMapping("/search")
-    public ResponseEntity<Page<BeachDto>> searchBeaches(
+    public ResponseEntity<PaginatedResponse<BeachDto>> searchBeaches(
             @Parameter(description = "Query string to search for beaches", required = false)
             @RequestParam(required = false) String query,
             @Parameter(description = "Page number (starting from 0)", required = false, example = "0")
@@ -81,7 +81,7 @@ public class BeachController {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<BeachDto> result = beachService.searchBeaches(query, pageable);
+        PaginatedResponse<BeachDto> result = beachService.searchBeaches(query, pageable);
 
         return ResponseEntity.ok(result);
     }

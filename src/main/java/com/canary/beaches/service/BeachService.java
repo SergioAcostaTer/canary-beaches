@@ -15,7 +15,7 @@ public interface BeachService {
     List<Beach> findAll();
     Optional<BeachDto> findById(Long id);
     Beach save(Beach beach);
-    Page<BeachDto> searchBeaches(String query, Pageable pageable);
+    PaginatedResponse<BeachDto> searchBeaches(String query, Pageable pageable);
     PaginatedResponse<BeachPreviewDto> searchBeachesPreview(String query, Pageable pageable);
     Optional<BeachDto> getRandomBeach(Island island);
     PaginatedResponse<BeachPreviewDto> getNearbyBeaches(Double latitude, Double longitude, Double radius, Pageable pageable);
