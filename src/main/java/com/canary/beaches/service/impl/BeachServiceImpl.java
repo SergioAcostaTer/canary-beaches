@@ -2,13 +2,17 @@ package com.canary.beaches.service.impl;
 
 import com.canary.beaches.dto.BeachDto;
 import com.canary.beaches.dto.BeachPreviewDto;
+import com.canary.beaches.dto.PaginatedResponse;
 import com.canary.beaches.mapper.BeachMapper;
 import com.canary.beaches.model.Beach;
+import com.canary.beaches.model.enums.Island;
 import com.canary.beaches.repository.BeachRepository;
 import com.canary.beaches.service.BeachService;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class BeachServiceImpl implements BeachService {
@@ -67,7 +72,7 @@ public class BeachServiceImpl implements BeachService {
     }
 
     @Override
-    public Page<BeachPreviewDto> searchBeachesPreview(String query, Pageable pageable) {
+    public PaginatedResponse<BeachPreviewDto> searchBeachesPreview(String query, Pageable pageable) {
         Specification<Beach> spec = (root, criteriaQuery, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -83,7 +88,32 @@ public class BeachServiceImpl implements BeachService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return beachRepository.findAll(spec, pageable)
+        Page<BeachPreviewDto> page = beachRepository.findAll(spec, pageable)
                 .map(BeachMapper::toPreviewDto);
+
+        return new PaginatedResponse<>(page);
     }
+
+
+    @Override
+    public Optional<BeachDto> getRandomBeach(Island island) {
+        String islandName = island == null ? null : island.name();
+        Beach beach = beachRepository.findRandomByIsland(islandName)
+                .orElseThrow(() -> new IllegalArgumentException("No beaches found for island " + islandName));
+        return Optional.of(BeachMapper.toDto(beach));
+    }
+
+    @Override
+    public PaginatedResponse<BeachPreviewDto> getNearbyBeaches(Double latitude, Double longitude, Double radius, Pageable pageable) {
+
+        Page<BeachPreviewDto> page = beachRepository.findNearbyBeaches(latitude, longitude, radius / 1000 , pageable)
+                .map(beach -> {
+                    BeachPreviewDto dto = BeachMapper.toPreviewDto(beach);
+                    return dto.calculateDistance(latitude, longitude);
+                });
+
+        return new PaginatedResponse<>(page);
+    }
+
+
 }

@@ -38,6 +38,8 @@ public class BeachMapper {
         dto.setIsland(mapIslandName(beach.getIsland()));
         dto.setProvince(beach.getProvince());
         dto.setMunicipality(beach.getMunicipality());
+        dto.setLatitude(beach.getLatitude());
+        dto.setLongitude(beach.getLongitude());
         return dto;
     }
 
