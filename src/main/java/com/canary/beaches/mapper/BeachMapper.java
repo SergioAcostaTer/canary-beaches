@@ -146,7 +146,6 @@ public class BeachMapper {
     }
 
 
-    // Helper methods
     private static String enumToString(Enum<?> enumValue) {
         return enumValue != null ? enumValue.name() : null;
     }
