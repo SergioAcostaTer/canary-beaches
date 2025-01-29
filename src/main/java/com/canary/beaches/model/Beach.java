@@ -3,8 +3,6 @@ package com.canary.beaches.model;
 import com.canary.beaches.model.enums.*;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -13,10 +11,12 @@ import java.util.Optional;
 @Data
 public class Beach {
 
+    // Primary Key
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Basic Information
     @Column(nullable = false)
     private String name;
 
@@ -30,6 +30,7 @@ public class Beach {
     @Column(nullable = false)
     private String province;
 
+    // Classification & Protection
     @Enumerated(EnumType.STRING)
     private Classification classification;
 
@@ -42,18 +43,25 @@ public class Beach {
     @Enumerated(EnumType.STRING)
     private Level riskLevel;
 
+    // Beach & ZBM (Zona de Baño Marítima)
     @Column(nullable = false)
     private boolean isBeach;
 
     @Column(nullable = false)
     private boolean isZbm;
 
+    // Dimensions
     private Integer length;
     private Integer width;
 
+    // Sand & Environment
     @Enumerated(EnumType.STRING)
     private SandColor sandColor;
 
+    @Enumerated(EnumType.STRING)
+    private Environment environmentCondition;
+
+    // Bathing Conditions
     @Column(name = "bathing_conditions")
     @Enumerated(EnumType.STRING)
     private Conditions bathingCondition;
@@ -76,26 +84,26 @@ public class Beach {
     private boolean waterSportsRentals;
     private boolean kidsArea;
     private boolean sportsArea;
+    private boolean hasFootShowers;
 
     // Safety
     private String lifeguardService;
+
+    // Access
+    private boolean accessByCar;
+    private boolean accessByShip;
+    private String accessByFoot;
 
     // Coordinates
     private Double latitude;
     private Double longitude;
 
+    // Last Update
     @Column(name = "last_update")
     private LocalDate lastUpdated;
 
-
-    @Enumerated(EnumType.STRING)
-    private Environment environmentCondition;
-    private boolean accessByCar;
-    private boolean accessByShip;
-    private String accessByFoot;
-    private boolean hasFootShowers;
+    // Wind & Surface Composition
     private boolean isWindy;
-    //arena, cemento, grava, hormigón, roca, bolos, callaos, composición, mixto
     private boolean hasSand;
     private boolean hasConcrete;
     private boolean hasGravel;
@@ -104,6 +112,7 @@ public class Beach {
     private boolean hasCobbles;
     private boolean hasMixedComposition;
 
+    // Setters
     public void setIsBeach(boolean playa) {
         this.isBeach = playa;
         this.isZbm = !playa;
@@ -122,7 +131,6 @@ public class Beach {
         this.hasCobbles = composition.toLowerCase().contains("callaos");
         this.hasMixedComposition = composition.toLowerCase().contains("mixto") || composition.toLowerCase().contains("composición");
     }
-
 
     public Optional<Beach> orElse(Object o) {
         return Optional.ofNullable((Beach) o);

@@ -52,11 +52,12 @@ public class BeachServiceImpl implements BeachService {
 
     @Override
     public PaginatedResponse<BeachDto> searchBeaches(String query, Pageable pageable) {
+        String formattedQuery = query.toLowerCase();
         Specification<Beach> spec = (root, criteriaQuery, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (StringUtils.hasText(query)) {
-                String likeQuery = "%" + query + "%";
+            if (StringUtils.hasText(formattedQuery)) {
+                String likeQuery = "%" + formattedQuery + "%";
                 predicates.add(cb.or(
                         cb.like(cb.lower(root.get("name")), likeQuery),
                         cb.like(cb.lower(root.get("municipality")), likeQuery),
